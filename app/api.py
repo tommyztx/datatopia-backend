@@ -31,7 +31,7 @@ with open("app/schema.sql", 'r') as file:
 
 # Prompt templates
 question_prompt = PromptTemplate.from_template(
-    """Given the following question and table fields, return a SQLite query that retrieves data related to the question. Give adequate column names when possible. The user is the owner of a pharmacy, and the data in the database represents data in the pharmacy. If the question is not related to the database, say "I cannot answer questions that are not related to your pharmacy."
+    """Given the following question and table fields, return a query for a Microsoft SQL Database that retrieves data related to the question. Give adequate column names when possible. The user is the owner of a pharmacy, and the data in the database represents data in the pharmacy. If the question is not related to the database, say "I cannot answer questions that are not related to your pharmacy.
 
 Database Schema: {table_metadata}
 Question: {question}
