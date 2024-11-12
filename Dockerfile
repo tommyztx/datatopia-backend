@@ -25,7 +25,7 @@ COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose the port for Vercel to route traffic
-EXPOSE 8080
+EXPOSE 10000
 
 # Run the app using Gunicorn (Flask production server)
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "app.api:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:10000", "app.api:app"]
