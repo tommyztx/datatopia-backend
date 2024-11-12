@@ -25,4 +25,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 10000
 
 # Run the app using Gunicorn (Flask production server)
-CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "app.api:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:10000", "app.api:app"]
