@@ -57,7 +57,7 @@ def connect_to_db():
     password = os.getenv('DB_PASSWORD')
     driver= '{ODBC Driver 18 for SQL Server}'
     
-    conn = pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
+    conn = pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password + ';Connection Timeout=300')
 
     return conn
     
@@ -131,8 +131,6 @@ def ask_question():
         return jsonify({
             "question": question,
             "sql_query": sql_query,
-            "columns": transformed_columns,
-            "data": result_df,
             "answer": final_answer
         })
     except Exception as e:
