@@ -1,9 +1,6 @@
 # Use a base image with Python
 FROM python:3.12-slim
 
-# Set the working directory
-WORKDIR /app
-
 
 # Install system dependencies required for pyodbc and ODBC Driver
 RUN apt-get update && apt-get install -y \
@@ -28,4 +25,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 10000
 
 # Run the app using Gunicorn (Flask production server)
-CMD ["gunicorn", "--bind", "0.0.0.0:10000", "app.api:app"]
+CMD ["gunicorn", "--bind", "10000:10000", "app.api:app"]
