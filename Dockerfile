@@ -19,6 +19,9 @@ RUN apt-get update && apt-get install -y \
 # Copy the rest of the app's source code
 COPY . .
 
+# Set PYTHONPATH to include the app directory module for language.py
+ENV PYTHONPATH=/app
+
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose the port for Vercel to route traffic
