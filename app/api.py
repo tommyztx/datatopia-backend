@@ -27,12 +27,55 @@ if not openai_api_key:
 llm = OpenAI(temperature=0, verbose=True, openai_api_key=openai_api_key)
 
 # Load the table metadata
-with open("app/schema.sql", 'r') as file:
+with open("schema.sql", 'r') as file:
     table_metadata = file.read().replace('\n', '')
 
 # Prompt templates
 question_prompt = PromptTemplate.from_template(
-    """Given the following question and table fields, return a query for a Microsoft SQL Database that retrieves data related to the question. Give adequate column names when possible. The user is the owner of a pharmacy, and the data in the database represents data in the pharmacy. If the question is not related to the database, say "I cannot answer questions that are not related to your pharmacy".
+    """Given the following question and table fields, return a SQL query for a Microsoft Database that retrieves data related to the question. Give adequate column names when possible. The user is the owner of a pharmacy, and the data in the database represents data in the pharmacy. If the question is not related to the database, say "I cannot answer questions that are not related to your pharmacy". 
+
+    IMPORTANT: Use TOP instead of LIMIT when getting a few items. 
+    Incorrect example using limit: 
+
+    SELECT Articles.ArtName, Stocks.ArtID, (PubPricePerUnit - BuyPricePerUnit) AS Margin
+            FROM Stocks
+            INNER JOIN Articles ON Stocks.ArtID = Articles.ArtID
+            WHERE Stocks.pharma_ID = 'BE_251410'
+            ORDER BY Margin ASC
+            LIMIT 1;
+
+    Correct example using Top: 
+
+    SELECT TOP 1 Articles.ArtName, Stocks.ArtID, (PubPricePerUnit - BuyPricePerUnit) AS Margin
+            FROM Stocks
+            INNER JOIN Articles ON Stocks.ArtID = Articles.ArtID
+            WHERE Stocks.pharma_ID = 'BE_251410'
+            ORDER BY Margin ASC
+            
+    Examples for table relations and formatting:
+
+    Question: How many items do I have with negative margin?
+    Answer: SELECT Count(ArtId) FROM Stocks WHERE (PubPricePerUnit - BuyPricePerUnit) < 0 AND pharma_ID = 'BE_251410'
+
+    Question: What is my Top 3 most expensive item? 
+    Answer: SELECT TOP 3 Articles.ArtName, Stocks.ArtID, Stocks.PubPricePerUnit
+                FROM Stocks
+                INNER JOIN Articles ON Stocks.ArtID = Articles.ArtID
+                WHERE Stocks.pharma_ID = 'BE_251410'
+                ORDER BY Stocks.PubPricePerUnit DESC;
+
+    Question: What are three items that have not sold within the past month?
+    Answer: SELECT TOP 3 
+            Articles.ArtName,
+            Stocks.ArtID,
+            Stocks.PubPricePerUnit
+        FROM Stocks
+        INNER JOIN Articles ON Stocks.ArtID = Articles.ArtID
+        LEFT JOIN Salesitems ON Stocks.ArtID = Salesitems.ArtIDSold
+        LEFT JOIN Sales ON Salesitems.SlsID = Sales.SlsID
+        WHERE Sales.TimeSaleStart IS NULL 
+        OR Sales.TimeSaleStart < DATEADD(MONTH, -1, GETDATE())
+        ORDER BY Stocks.PubPricePerUnit DESC;
 
 Database Schema: {table_metadata}
 Question: {question}
