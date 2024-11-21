@@ -1,12 +1,12 @@
 # Pharmacy Data Query Bot
 
-This project is a demo of a **Pharmacy Data Query Bot** built using `LangChain`, `Streamlit`, and `SQLite`. The bot allows users to ask questions about pharmacy sales, customer data, and product information, and provides human-like responses based on SQL queries executed on an SQLite database.
+This project is a demo of a **Pharmacy Data Query Bot** built using `LangChain`, `OpenAI`, and `Microsoft SQL`. The bot allows users to ask questions about pharmacy sales, customer data, and product information, and provides human-like responses based on SQL queries executed on an SQLite database.
 
 ## Features
 
-- Interactive Streamlit UI for asking questions and displaying answers
+- Interactive React UI for asking questions and displaying answers
 - Preloaded frequently asked questions (FAQs) in a sidebar for quick access
-- Executes SQL queries on customer, order, and product data
+- Executes SQL queries on a Microsoft SQL database
 - Provides responses in a human-like conversational manner
 - FAQ answers, user questions, and responses are stored in session history for easy access
 

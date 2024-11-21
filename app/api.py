@@ -14,20 +14,22 @@ frontend_url = os.getenv('FRONTEND_URL')
 if not frontend_url:
     raise ValueError("Missing required environment variable: FRONTEND_URL")
 
+openai_api_key = os.getenv('OPENAI_API_KEY')
+if not openai_api_key:
+    raise ValueError("Missing required environment variable: OPENAI_API_KEY")
+
 
 # Initialize the Flask app
 app = Flask(__name__)
 CORS(app, origins=[frontend_url])
     
-openai_api_key = os.getenv('OPENAI_API_KEY')
-if not openai_api_key:
-    raise ValueError("Missing required environment variable: OPENAI_API_KEY")
+
 
 # Initialize OpenAI language model
 llm = OpenAI(temperature=0, verbose=True, openai_api_key=openai_api_key)
 
 # Load the table metadata
-with open("app/schema.sql", 'r') as file:
+with open("schema.sql", 'r') as file:
     table_metadata = file.read().replace('\n', '')
 
 # Prompt templates
@@ -117,6 +119,7 @@ def execute_sql_query(query):
 
 # Endpoint to handle questions
 @app.route('/ask', methods=['POST'])
+
 def ask_question():
     try:
         data = request.json
@@ -150,7 +153,7 @@ def ask_question():
             return jsonify({
                 "question": question,
                 "sql_query": sql_query,
-                "answer": "There was an error that occured runnning the query",
+                "answer": "There was an error that occured running the query",
                 "error" : error
             })
         if sql_result is None or not sql_result:
