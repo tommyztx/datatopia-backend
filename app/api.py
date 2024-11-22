@@ -29,7 +29,7 @@ CORS(app, origins=[frontend_url])
 llm = OpenAI(temperature=0, verbose=True, openai_api_key=openai_api_key)
 
 # Load the table metadata
-with open("schema.sql", 'r') as file:
+with open("app/schema.sql", 'r') as file:
     table_metadata = file.read().replace('\n', '')
 
 # Prompt templates
